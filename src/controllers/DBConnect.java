@@ -1,6 +1,6 @@
-package com.company.controllers;
+package controllers;
 
-import com.company.models.Movie;
+import models.Movie;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ public class DBConnect {
 
     public DBConnect(String dbName) {
         this.dbName = dbName;
-        this.url = "jdbc:sqlite:C:/sqlite/db/" + dbName;
+        this.url = "jdbc:sqlite:/Users/pieceoftech/sqlite/db" + dbName;
     }
 
     public void createNewDatabase() {
@@ -62,6 +62,20 @@ public class DBConnect {
         }
 
     }
+
+    public void delete(String title) {
+        String sql = "DELETE FROM movies WHERE title = " + "'" + title + "';";
+
+        try(Connection conn = DriverManager.getConnection(url)){
+            Statement statement = conn.createStatement();
+            statement.execute(sql);
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        
+    }
+
 
     public ArrayList<Movie> getData(){
         String sql = "SELECT id, title, releaseDate, rating FROM movies";

@@ -1,26 +1,48 @@
-package com.company.controllers;
+package controllers;
 
-
-import com.company.models.Movie;
+import models.Movie;
+import views.CmdLineView;
 
 import java.util.ArrayList;
 
 public class Main {
+    static CmdLineView view = new CmdLineView();
+    static DBConnect db = new DBConnect("movies.db");
 
     public static void main(String[] args) {
-       DBConnect db = new DBConnect("movies.db");
        db.createNewDatabase();
        db.addTables();
-       db.addData("Star Wars", "1977", "PG");
-       db.addData("CODA", "2021", "PG-13");
-       db.addData("The Life of Emile Zola", "1937", "NR");
-       db.addData("The Night House", "2021", "R");
 
-       ArrayList<Movie> theMovies = db.getData();
-        for(Movie movie : theMovies){
-            System.out.println(movie.toString());
-        }
-
+       menu();
 
     }
+
+    public static void addMovie() {
+        System.out.println("addMovie");
+        while(view.getContinue().equals("y")) {
+            db.addData(view.getTitle(), view.getYear(), view.getRating());
+        }
+        menu();
+    }
+
+
+    public static void showMovies() {
+        ArrayList<Movie> theMovies = db.getData();
+        for(Movie movie : theMovies){
+            view.printDatabase(movie);
+        }
+        menu();
+    }
+
+    public static void menu() {
+        switch(view.menuInput()) {
+            case 1: addMovie();
+                break;
+            case 2: showMovies();
+                break;
+            default: view.menuError();
+       }
+    }
+
 }
+
